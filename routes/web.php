@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,3 +50,6 @@ Route::get('/admin/tags/restore/{id}/{slug}', [TagController::class, 'restore'])
 Route::get('/admin/tags/delete/{id}/{slug}', [TagController::class, 'destroy']);
 Route::get('/admin/tags/trashed', [TagController::class, 'trashed']);
 Route::get('/admin/tags/forceDelete/{id}/{slug}', [TagController::class, 'forceDelete']);
+
+// Post Routes
+Route::get('/admin/posts', [PostController::class, 'index'])->name('admin.posts');

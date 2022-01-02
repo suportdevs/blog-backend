@@ -59,7 +59,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="sidenav-item-link" href="analytics.html">
+                                <a class="sidenav-item-link" href="{{ route('admin.posts') }}">
                                     <span class="nav-text">Posts</span>
                                 </a>
                             </li>
