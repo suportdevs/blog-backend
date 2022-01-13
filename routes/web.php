@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
@@ -53,3 +54,6 @@ Route::get('/admin/tags/forceDelete/{id}/{slug}', [TagController::class, 'forceD
 
 // Post Routes
 Route::get('/admin/posts', [PostController::class, 'index'])->name('admin.posts');
+Route::post('ckeditor/image_upload', [CKEditorController::class, 'upload'])->name('upload');
+Route::get('/admin/posts/create', [PostController::class, 'create']);
+Route::post('/admin/post/store', [PostController::class, 'store'])->name('admin.post.store');

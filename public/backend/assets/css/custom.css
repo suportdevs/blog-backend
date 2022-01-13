@@ -1,0 +1,14 @@
+div#dataTables_paginate ul li a {
+    height: auto;
+    padding: 10px;
+    font-size: .785rem;
+}
+.form-group .select2-container--bootstrap .select2-selection--single {
+    padding: 10px 0 30px 0;
+}
+.form-group input:focus {
+    border: 1px solid #20a8d8 !important;
+}
+.form-group .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-blurred, .form-group .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+    min-height: 100px;
+}

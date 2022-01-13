@@ -16,18 +16,18 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('tag_id')->nullable();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->string('featured_image')->nullable();
             $table->text('excerpt')->nullable();
             $table->text('description');
-            $table->string('type')->nullable();
-            $table->string('post_status')->default('published');
-            $table->boolean('is_featured')->nullable();
+            $table->integer('type')->nullable();
+            $table->integer('post_status')->default(1);
+            $table->integer('is_featured')->default(0);
+            $table->integer('view_count')->default(0);
             $table->string('meta_title', 200)->nullable();
             $table->text('meta_keyword')->nullable();
             $table->text('meta_description')->nullable();
-            $table->morphs('commentable');
             $table->foreignId('updated_by')->nullable();
             $table->foreignId('deleted_by')->nullable();
             $table->timestamps();

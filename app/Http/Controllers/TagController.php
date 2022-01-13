@@ -106,7 +106,7 @@ class TagController extends Controller
             // upload new file
             $new_file = $request->file('tag_img');
             $fileName = hexdec(uniqid()).'.'.$new_file->getClientOriginalExtension();
-            Image::make($new_file)->resize(1080, 600)->save('images/tags/'.$fileName);
+            Image::make($new_file)->resize(1600, 1060)->save('images/tags/'.$fileName);
             $final_img = 'images/tags/'.$fileName;
                     
             $data = array();

@@ -77,7 +77,7 @@
                                             <td>{{ $tag->user->name }}</td>
                                         </tr>
                                         <tr>
-                                            <td><b>Author</b></td>
+                                            <td><b>Updated By</b></td>
                                             <td>{{ $tag->user->name }}</td>
                                         </tr>
                                         <tr>
