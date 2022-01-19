@@ -40,6 +40,19 @@ class PostController extends Controller
             'tag_id.*' => ['required', 'integer', 'exists:tags,id'],
             'meta_title' => ['required', 'max:100'],
         ]);
+
+        if($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName.'_'.time().'.'.$extension;
+            $request->file('upload')->move(public_path('pages'), $fileName);
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+            $url = asset('pages/'.$fileName);
+            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url')</script>";
+            echo $response;
+            }
+
         $image = $request->file('featured_image');
         
         if(isset($image)){
@@ -70,4 +83,19 @@ class PostController extends Controller
 
         return Redirect()->route('admin.posts')->with('status', 'Post Created Successfull.');
     }
+    public function show($id)
+    {
+        $post = Post::find($id);
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('backend.components.posts.show', ['post'=>$post, 'categories'=>$categories, 'tags'=>$tags]);
+    }
+    public function edit($id)
+    {
+        $post = Post::find($id);
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('backend.components.posts.edit', ['post'=>$post, 'categories'=>$categories, 'tags'=>$tags]);
+    }
+
 }

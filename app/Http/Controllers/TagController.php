@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tags;
+use App\Models\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ class TagController extends Controller
     public function index()
     {
         // $tags = DB::table('tags')->orderBy('id', 'DESC')->get();
-        $tags = Tags::latest()->get();
+        $tags = Tag::latest()->get();
         return view('backend.components.tags.index', compact('tags'));
     }
     public function create()
@@ -58,7 +58,7 @@ class TagController extends Controller
         // $data['created_at'] = Carbon::now();
         // DB::table('tags')->insert($data);
 
-        $tag = new Tags();
+        $tag = new Tag();
         $tag->user_id = Auth::user()->id;
         $tag->tag_name = $request->tag_name;
         $tag->slug = Str::slug($request->tag_name, '-');
@@ -95,7 +95,7 @@ class TagController extends Controller
             'tag_img.mimes' => 'Image must be jpg, jpeg, or png',
         ]);
 
-        $tag = Tags::find($id);
+        $tag = Tag::find($id);
 
         if($request->file('tag_img') != ''){
             // code for remove old image
@@ -138,32 +138,32 @@ class TagController extends Controller
     public function show($id)
     {
         // $tag = DB::table('tags')->where('id', $id)->first();
-        $tag = Tags::find($id);
+        $tag = Tag::find($id);
         return view('backend.components.tags.show', ['tag' => $tag]);
     }
     public function restore($id)
     {
-        Tags::onlyTrashed()->find($id)->restore();
+        Tag::onlyTrashed()->find($id)->restore();
         return Redirect()->back()->with('status', 'Tag Restored Successfull.');
     }
     public function destroy($id)
     {
-        Tags::find($id)->delete();
+        Tag::find($id)->delete();
         return Redirect()->back()->with('status', 'Tag Deleted Successfull.');
     }
     public function trashed()
     {
-        $tags = Tags::onlyTrashed()->get();
+        $tags = Tag::onlyTrashed()->get();
         return view('backend.components.tags.trashed', ['tags' => $tags]);
     }
     public function forceDelete($id)
     {
-        $tag = Tags::onlyTrashed()->find($id);
+        $tag = Tag::onlyTrashed()->find($id);
 
         $exit_img = $tag->image;
         unlink($exit_img);
 
-        Tags::onlyTrashed()->find($id)->forceDelete();
+        Tag::onlyTrashed()->find($id)->forceDelete();
 
         return Redirect()->back()->with('status', 'Tag Permanently Deleted Successfull.');
     }

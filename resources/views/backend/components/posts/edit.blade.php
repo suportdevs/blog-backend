@@ -58,53 +58,162 @@
 
                         <div class="row mt-4">
                             <div class="col">
-                                <form class="form" method="POST" action="{{ route('admin.tags.update',[$tag->id, $tag->slug]) }}" enctype="multipart/form-data">
+                            <form class="form" method="POST" action="{{ route('admin.post.store') }}" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-8 col-8 col-sm-12">
-                                            <div class="form-group">
-                                                <label for="name">Name</label> <span class="text-danger">*</span>
-                                                <input class="form-control" type="text" name="tag_name" id="name" placeholder="Name" value="{{ $tag->tag_name }}" require="">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="name">Slug</label> <span class="text-danger">*</span>
-                                                <input class="form-control" type="text" name="slug" id="slug" placeholder="Slug" value="{{ $tag->slug }}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="image">Image</label> <span class="text-danger">*</span>
-                                                <input class="form-control" type="file" name="tag_img" id="image">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-4 col-sm-12">
-                                            <div class="card mt-2">
-                                                <div class="card-header text-center">
-                                                    Featured Image
-                                                </div>
-                                                <div class="card-body">
-                                                    <img src="{{ asset($tag->image) }}" width="100%" height="150px" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-12 col-md-12">
-                                            <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <textarea class="form-control" name="description" id="description" placeholder="Description" value="{{ $tag->description }}">{{ $tag->description }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row justify-content-center">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="title">Title</label> <span class="text-danger">*</span>
+                                                <input class="form-control" type="text" name="title" id="title" placeholder="Post Title" value="{{ $post->title }}" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="intro">Intro</label> <span class="text-danger">*</span>
+                                                <textarea class="form-control" name="excerpt" id="intro" placeholder="Intro" required="" value="{{ $post->excerpt }}">{{ $post->excerpt }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="description">Content</label> <span class="text-danger">*</span>
+                                                <textarea class="form-control" name="description" id="postTextareaEditor" placeholder="Content" value="{{ $post->description }}">{{ $post->description }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="featured_image">Featured Image</label> <span class="text-danger">*</span>
+                                                <div class="input-group mb-3">
+                                                    <input class="form-control" type="file" name="featured_image" id="featured_image" placeholder="Featured Image" required="" aria-label="Image" aria-describedby="button-image" value="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-info" type="button" id="button-image"><i class="fas fa-folder-open"></i> Browse</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="category_id">Category</label> <span class="text-danger">*</span>
+                                                <select name="category_id[]" id="category_id" class="form-control select2" multiple="multiple">
+                                                    @foreach($categories as $category)
+                                                        <option
+                                                            @foreach($post->categories as $postCategory)
+                                                                {{ $postCategory->id == $category->id ? "selected" : ""}}
+                                                            @endforeach
+                                                        value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="type">Type</label> <span class="text-danger">*</span>
+                                                <select name="type" id="type" class="form-control select2">
+                                                    <option
+                                                        {{ $post->type ? "selected" : ""}}
+                                                        value="{{ $post->type }}">
+                                                        @if($post->type ==1)
+                                                            Article
+                                                        @elseif($post->type == 2)
+                                                            News
+                                                        @else
+                                                            Media
+                                                        @endif
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="is_featured">Is Featured</label> <span class="text-danger">*</span>
+                                                <select name="is_featured" id="is_featured" class="form-control select2">
+                                                    <option value="">Choose any Option</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <button class="btn btn-success btn-sm" type="submit"><i class="mdi mdi-swap-horizontal"></i> Update</button>
+                                                <label for="tag_id">Tags</label>
+                                                <select name="tag_id[]" id="tag_id" class="form-control select2" multiple>
+                                                    <option value="">-- Select an Option --</option>
+                                                    @foreach($tags as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->tag_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="status">Status</label> <span class="text-danger">*</span>
+                                                <select name="status" id="status" class="form-control select2">
+                                                    <option value="">-- Select an Option --</option>
+                                                    <option value="1">Published</option>
+                                                    <option value="0">Draft</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="meta_title">Meta Title</label>
+                                                <input class="form-control" type="text" name="meta_title" id="meta_title" placeholder="Meta Title">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="meta_keywords">Meta Keywords</label>
+                                                <input class="form-control" type="text" name="meta_keywords" id="meta_keywords" placeholder="Meta Keywords">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="meta_description">Meta Description</label>
+                                                <input class="form-control" type="text" name="meta_description" id="meta_description" placeholder="Meta Description">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="meta_og_image">Meta Open Graph Image</label>
+                                                <input class="form-control" type="text" name="meta_og_image" id="meta_og_image" placeholder="Meta Open Graph Image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="meta_og_url">Meta Open Graph URL</label>
+                                                <input class="form-control" type="text" name="meta_og_url" id="meta_og_url" placeholder="Meta Open Graph URL">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <button class="btn btn-success" type="submit"><i class="fas fa-plus-circle"></i> Create</button>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="float-right">
                                                 <div class="form-group">
-                                                    <button type="button" class="btn btn-warning btn-sm" onclick="history.back(-1)"><i class="mdi mdi-reply"></i> Cancel</button>
+                                                    <button type="button" class="btn btn-warning" onclick="history.back(-1)"><i class="fas fa-reply"></i> Cancel</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -115,11 +224,11 @@
                         <div class="row">
                            <div class="col-sm-12 col-md-12 text-right">
                             <hr/>
-                                @if($tag->created_at)
-                                    <span>{{ 'Created At: ' }}{{ Carbon\Carbon::parse($tag->created_at)->toDayDateTimeString() }}</span> 
+                                @if($post->created_at)
+                                    <span><b>{{ 'Created At: ' }}</b>{{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}</span> 
                                 @endif
-                                @if($tag->updated_at)
-                                    <span>{{ ' Updated At: ' }}{{ Carbon\Carbon::parse($tag->updated_at)->diffForHumans() }}</span> 
+                                @if($post->updated_at)
+                                    <span><b>{{ ' Updated At: ' }}</b>{{ Carbon\Carbon::parse($post->updated_at)->diffForHumans() }}</span> 
                                 @endif
                            </div>
                         </div>
@@ -128,4 +237,27 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+    <script src="{{ asset('backend/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('backend/select2/select2.min.js') }}"></script>
+    <script>
+        // ClassicEditor
+        //     .create( document.querySelector( '#postTextareaEditor' ) )
+        //     .then( editor => {
+        //         return editor;
+        //     } )
+        //     .catch( err => {
+        //         return err;
+        //     } );
+            
+        // Select2 javascript
+        $(document).ready(function() {
+            $('.select2').select2({
+                theme: "bootstrap",
+                placeholder: "-- Choose any Option --"
+            });
+        });
+    </script>
+    
+    @endpush
 </x-admin-layout>

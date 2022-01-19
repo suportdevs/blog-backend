@@ -18,12 +18,20 @@ class Post extends Model
         'description',
 
     ];
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+    public function postUpdatedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'updated_by');
+    }
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 }

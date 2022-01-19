@@ -45,7 +45,7 @@
                             <!--/.col-->
                             <div class="col-4">
                                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-                                    <a href="" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="Posts List"><i class="fas fa-list-ul"></i> List</a>
+                                    <a href="{{ route('admin.posts') }}" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="Posts List"><i class="fas fa-list-ul"></i> List</a>
                                 </div>
                             </div>
                             <!--/.col-->
@@ -218,14 +218,18 @@
     <script src="{{ asset('backend/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('backend/select2/select2.min.js') }}"></script>
     <script>
-        ClassicEditor
-            .create( document.querySelector( '#postTextareaEditor' ) )
-            .then( editor => {
-                return editor;
-            } )
-            .catch( err => {
-                return err;
-            } );
+        // ClassicEditor
+        //     .create( document.querySelector( '#postTextareaEditor' ) )
+        //     .then( editor => {
+        //         return editor;
+        //     } )
+        //     .catch( err => {
+        //         return err;
+        //     } );
+            CKEDITOR.replace('description', {
+                filebrowserUploadUrl: "{{route('admin.post.store', ['_token' => csrf_token() ])}}",
+                filebrowserUploadMethod: 'form'
+            });
         // Select2 javascript
         $(document).ready(function() {
             $('.select2').select2({

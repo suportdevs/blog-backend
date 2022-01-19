@@ -74,11 +74,26 @@
                                 @foreach($posts as $item)
                                 <tr>
                                     <td>{{ $i ++ }}</td>
-                                    <td>{{ $item->title }}</td>
+                                    <td>{{ $item->title }} 
+                                        @if($item->post_status == 1)
+                                            <span class="badge rounded-pill badge-primary">Published</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-warning">Drafted</span>
+                                        @endif
+                                        @if($item->is_featured == 1)
+                                            <span class="badge rounded-pill bg-success">Featured</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-danger">Not Featured</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $item->slug }}</td>
-                                    <td><img src="{{Storage::disk('public')->url('public/posts/'.$item->featured_image)}}" width="60px" height="60px" alt=""></td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td><div class="btn btn-primary btn-sm">show</div></td>
+                                    <td><img src="{{ Storage::disk('public')->url('posts/'.$item->featured_image) }}" width="60px" height="40px" alt=""></td>
+                                    <td>{{ $item->created_at->diffForHumans() }}</td>
+                                    <td class="text-white">
+                                        <a href="{{ url('/admin/post/edit/'.$item->id,$item->slug) }}" class="btn btn-primary btn-sm"><span class="mdi mdi-wrench"></span></a>
+                                        <a href="{{ url('/admin/post/show/'.$item->id,$item->slug) }}" class="btn btn-warning btn-sm"><span class="mdi mdi-monitor-multiple"></span></a>
+                                        <a class="btn btn-danger btn-sm"><span class="mdi mdi-trash-can-outline"></span></a>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

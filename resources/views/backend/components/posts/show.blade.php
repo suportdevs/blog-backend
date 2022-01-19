@@ -6,7 +6,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb align-items-center mb-0">
                         <li class=""> <a href="{{ url('/dashboard') }}"><i class="mdi mdi-view-dashboard-outline"></i> Dashboard /</a> </li>
-                        <li class=" active"><a href="{{ route('admin.tags') }}"><i class="mdi mdi-tag-multiple"></i> Tags / </a></li>
+                        <li class=" active"><a href="{{ route('admin.posts') }}"><i class="mdi mdi-post-multiple"></i> post / </a></li>
                         <li> Show</li>
                     </ol>
                 </div>
@@ -26,17 +26,17 @@
                         <div class="row">
                             <div class="col-8">
                                 <h4 class="card-title mb-0">
-                                    <i class="mdi mdi-tag-multiple"></i> Tags <small class="text-muted">Detail</small>
+                                    <i class="mdi mdi-post-multiple"></i> Post <small class="text-muted">Detail</small>
                                 </h4>
                                 <div class="small text-muted">
-                                    Tags Management Dashboard
+                                    Post Management Dashboard
                                 </div>
                             </div>
                             <!--/.col-->
                             <div class="col-4">
                                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
                                     <button type="button" class="btn btn-warning btn-sm" onclick="history.back(-1)"><i class="mdi mdi-reply"></i></button>
-                                    <a href="{{ url('/admin/tags/edit/'.$tag->id, $tag->slug) }}" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="tags List"><i class="mdi mdi-wrench"></i> Edit</a>
+                                    <a href="{{ url('/admin/post/edit/'.$post->id, $post->slug) }}" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="post List"><i class="mdi mdi-wrench"></i> Edit</a>
                                 </div>
                             </div>
                             <!--/.col-->
@@ -47,7 +47,7 @@
 
                         <div class="row mt-4 text-center">
                             <div class="col-md-7">
-                                <p class="mb-5"> Displaing all the values of <b>{{ $tag->tag_name }} - Id: {{ $tag->id }}</b></p>
+                                <p class="mb-5"> Displaing all the values of <b>Post - Id: {{ $post->id }}</b></p>
                                 <table class="table table-bordered table-striped text-left">
                                     <thead>
                                         <tr>
@@ -58,35 +58,47 @@
                                     <tbody>
                                         <tr>
                                             <td><b>Id</b></td>
-                                            <td>{{ $tag->id }}</td>
+                                            <td>{{ $post->id }}</td>
                                         </tr>
                                         <tr>
-                                            <td><b>Name</b></td>
-                                            <td>{{ $tag->tag_name }}</td>
+                                            <td><b>Post Title</b></td>
+                                            <td>{{ $post->tile }}</td>
                                         </tr>
                                         <tr>
-                                            <td><b>Slug</b></td>
-                                            <td>{{ $tag->slug }}</td>
+                                            <td><b>Post Slug</b></td>
+                                            <td>{{ $post->slug }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Short Description</b></td>
+                                            <td>{!! $post->excerpt !!}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Description</b></td>
-                                            <td>{{ $tag->description }}</td>
+                                            <td>{!! $post->description !!}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Author</b></td>
-                                            <td>{{ $tag->user->name }}</td>
+                                            <td>
+                                                @if($post->user->name)
+                                                   {{ $post->user->name }}
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td><b>Author</b></td>
-                                            <td>{{ $tag->user->name }}</td>
+                                            <td><b>Updated By</b></td>
+                                            <td>
+                                                @if($post->updated_by)
+                                                   {{ $post->postUpdatedBy->updated_by }}
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td><b>Created At</b></td>
-                                            <td>{{ Carbon\Carbon::parse($tag->created_at)->toDayDateTimeString() }}</td>
+                                            <td>{{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Updated At</b></td>
-                                            <td>{{ Carbon\Carbon::parse($tag->updated_at)->toDayDateTimeString() }}</td>
+                                            <td>{{ Carbon\Carbon::parse($post->updated_at)->toDayDateTimeString() }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -99,13 +111,44 @@
                                         
                                     </div>
                                     <div class="card-body">
-                                        <img src="{{ asset($tag->image) }}" width="100%" height="150px" alt="">
+                                        <img src="{{ Storage::disk('public')->url('posts/'.$post->featured_image) }}" width="100%" height="150px" alt="">
+                                    </div>
+                                </div>
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <p>Tags</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            @foreach($tags as $tag)
+                                            @foreach($post->tags as $postTag)
+                                            @if($tag->id == $postTag->id)
+                                                <li  class="flex">{{ $tag->tag_name }}</li>
+                                            @endif
+                                            @endforeach
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <p>Category</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            @foreach($categories as $category)
+                                            @foreach($post->categories as $postCategory)
+                                            @if($category->id == $postCategory->id)
+                                                <li  class="flex">{{ $category->category_name }}</li>
+                                            @endif
+                                            @endforeach
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
                                 <div class="card mt-4">
                                     <div class="card-header">
                                         <p>Post</p>
-                                        
                                     </div>
                                     <div class="card-body">
                                         <p>Post link</p>

@@ -57,3 +57,5 @@ Route::get('/admin/posts', [PostController::class, 'index'])->name('admin.posts'
 Route::post('ckeditor/image_upload', [CKEditorController::class, 'upload'])->name('upload');
 Route::get('/admin/posts/create', [PostController::class, 'create']);
 Route::post('/admin/post/store', [PostController::class, 'store'])->name('admin.post.store');
+Route::get('/admin/post/show/{id}/{slug}', [PostController::class, 'show']);
+Route::get('/admin/post/edit/{id}/{slug}', [PostController::class, 'edit']);
