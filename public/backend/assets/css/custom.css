@@ -12,3 +12,16 @@ div#dataTables_paginate ul li a {
 .form-group .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-blurred, .form-group .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
     min-height: 100px;
 }
+span.badge.c-badge {
+    padding: 5px 5px 3px 5px;
+}
+.post-description {
+    overflow: hidden;
+}
+
+.post-description figure img {
+    width: auto;
+}
+.post-detail-wrap hr {
+    height: 0;
+}

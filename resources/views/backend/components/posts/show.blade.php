@@ -6,7 +6,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb align-items-center mb-0">
                         <li class=""> <a href="{{ url('/dashboard') }}"><i class="mdi mdi-view-dashboard-outline"></i> Dashboard /</a> </li>
-                        <li class=" active"><a href="{{ route('admin.posts') }}"><i class="mdi mdi-post-multiple"></i> post / </a></li>
+                        <li class=" active"><a href="{{ route('admin.posts') }}"><i class="mdi mdi-file-document-outline"></i> Posts / </a></li>
                         <li> Show</li>
                     </ol>
                 </div>
@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <h4 class="card-title mb-0">
-                                    <i class="mdi mdi-post-multiple"></i> Post <small class="text-muted">Detail</small>
+                                    <i class="mdi mdi-file-document-outline"></i> Post <small class="text-muted">Detail</small>
                                 </h4>
                                 <div class="small text-muted">
                                     Post Management Dashboard
@@ -46,71 +46,70 @@
                         <hr>
 
                         <div class="row mt-4 text-center">
-                            <div class="col-md-7">
+                            <div class="col-md-9 post-detail-wrap">
                                 <p class="mb-5"> Displaing all the values of <b>Post - Id: {{ $post->id }}</b></p>
-                                <table class="table table-bordered table-striped text-left">
-                                    <thead>
-                                        <tr>
-                                            <th><b>Key</b></th>
-                                            <th>Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><b>Id</b></td>
-                                            <td>{{ $post->id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Post Title</b></td>
-                                            <td>{{ $post->tile }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Post Slug</b></td>
-                                            <td>{{ $post->slug }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Short Description</b></td>
-                                            <td>{!! $post->excerpt !!}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Description</b></td>
-                                            <td>{!! $post->description !!}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Author</b></td>
-                                            <td>
-                                                @if($post->user->name)
-                                                   {{ $post->user->name }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Updated By</b></td>
-                                            <td>
-                                                @if($post->updated_by)
-                                                   {{ $post->postUpdatedBy->updated_by }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Created At</b></td>
-                                            <td>{{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Updated At</b></td>
-                                            <td>{{ Carbon\Carbon::parse($post->updated_at)->toDayDateTimeString() }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Title</h4>
+                                    <p class="my-3 bg-light py-3 px-2">{{ $post->title }}</p>
+                                </div>
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Slug</h4>
+                                    <p class="my-3 bg-light py-3 px-2">{{ $post->slug }}</p>
+                                </div>
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Short Description</h4>
+                                    <p class="my-3 bg-light py-3 px-2">{!! $post->excerpt !!}</p>
+                                </div>
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Long Description</h4>
+                                    <div class="my-3 bg-light py-3 px-2 post-description">
+                                        <span class="">{!! $post->description !!}</span>
+                                    </div>
+                                </div>
+                                @if($post->user->name)
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Author</h4>
+                                    <p class="my-3 bg-light py-3 px-2">
+                                        {{ $post->user->name }}
+                                    </p>
+                                </div>
+                                @endif
+                                @if($post->updated_by)
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Updated By</h4>
+                                    <p class="my-3 bg-light py-3 px-2">
+                                        {{ $post->postUpdatedBy->updated_by }}
+                                    </p>
+                                </div>
+                                @endif
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Created At</h4>
+                                    <p class="my-3 bg-light py-3 px-2">
+                                        {{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}
+                                    </p>
+                                </div>
+                                <hr>
+                                <div class="post-description text-left  border-start border-primary border-3 pl-2">
+                                    <h4>Post Updated At</h4>
+                                    <p class="my-3 bg-light py-3 px-2">
+                                        {{ Carbon\Carbon::parse($post->updated_at)->toDayDateTimeString() }}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <h5 class="mb-5">View Post</h5>
                                 <div class="card">
                                     <div class="card-header">
                                         <p>Featured Image</p>
                                         
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body p-0">
                                         <img src="{{ Storage::disk('public')->url('posts/'.$post->featured_image) }}" width="100%" height="150px" alt="">
                                     </div>
                                 </div>

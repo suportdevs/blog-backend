@@ -28,7 +28,7 @@ class PostController extends Controller
         ]);
     }
     public function store(Request $request)
-    {
+    {        
         $request->validate([
             'title' => ['required', 'string', 'max:100'],
             'excerpt' => ['required', 'string', 'max:100'],
@@ -40,7 +40,7 @@ class PostController extends Controller
             'tag_id.*' => ['required', 'integer', 'exists:tags,id'],
             'meta_title' => ['required', 'max:100'],
         ]);
-
+                
         if($request->hasFile('upload')) {
             $originName = $request->file('upload')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
@@ -83,6 +83,19 @@ class PostController extends Controller
 
         return Redirect()->route('admin.posts')->with('status', 'Post Created Successfull.');
     }
+
+    public function ckeditor()
+    {
+        $post = new Post();
+        $post->id = 0;
+        $post->exists = true;
+        $contentImage = $post->addMediaFromRequest('upload')->toMediaCollection('images');
+
+        return response()->json([
+            'url' => $contentImage->getUrl('thumb')
+        ]);
+    }
+
     public function show($id)
     {
         $post = Post::find($id);

@@ -6,7 +6,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb align-items-center mb-0">
                         <li class=""> <a href="{{ url('/dashboard') }}"><i class="mdi mdi-view-dashboard-outline"></i> Dashboard /</a> </li>
-                        <li class=" active"><i class="mdi mdi-sitemap"></i> Posts</li>
+                        <li class=" active"><i class="mdi mdi-file-document-outline"></i> Posts</li>
                     </ol>
                 </div>
                 <!-- /.col -->
@@ -36,7 +36,7 @@
                         <div class="row mb-3 align-items-center">
                             <div class="col-8">
                                 <h4 class="card-title mb-0">
-                                    <i class="mdi mdi-sitemap"></i> Posts <small class="text-muted">Data Table List</small>
+                                    <i class="mdi mdi-file-document-outline"></i> Posts <small class="text-muted">Data Table List</small>
                                 </h4>
                                 <div class="small text-muted"> Posts Management Dashboard </div>
                             </div>
@@ -76,14 +76,14 @@
                                     <td>{{ $i ++ }}</td>
                                     <td>{{ $item->title }} 
                                         @if($item->post_status == 1)
-                                            <span class="badge rounded-pill badge-primary">Published</span>
+                                            <span class="badge rounded-pill c-badge badge-primary">Published</span>
                                         @else
-                                            <span class="badge rounded-pill bg-warning">Drafted</span>
+                                            <span class="badge rounded-pill c-badge bg-warning">Drafted</span>
                                         @endif
                                         @if($item->is_featured == 1)
-                                            <span class="badge rounded-pill bg-success">Featured</span>
+                                            <span class="badge rounded-pill c-badge bg-success">Featured</span>
                                         @else
-                                            <span class="badge rounded-pill bg-danger">Not Featured</span>
+                                            <span class="badge rounded-pill c-badge bg-danger">Not Featured</span>
                                         @endif
                                     </td>
                                     <td>{{ $item->slug }}</td>

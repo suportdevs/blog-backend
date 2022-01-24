@@ -6,7 +6,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb align-items-center mb-0">
                         <li class=""> <a href="{{ url('/dashboard') }}"><i class="mdi mdi-view-dashboard-outline"></i> Dashboard /</a> </li>
-                        <li class=" active"><a href="{{ route('admin.tags') }}"><i class="mdi mdi-tag-multiple"></i> Tags / </a></li>
+                        <li class=" active"><a href="{{ route('admin.tags') }}"><i class="mdi mdi-file-document-outline"></i> Posts / </a></li>
                         <li> Edit</li>
                     </ol>
                 </div>
@@ -38,16 +38,14 @@
                         <div class="row">
                             <div class="col-8">
                                 <h4 class="card-title mb-0">
-                                    <i class="mdi mdi-tag-multiple"></i> Tags <small class="text-muted">Edit</small>
+                                    <i class="mdi mdi-file-document-outline"></i> Posts <small class="text-muted">Edit</small>
                                 </h4>
-                                <div class="small text-muted">
-                                    Tags Management Dashboard
-                                </div>
+                                <div class="small text-muted">Posts Management Dashboard</div>
                             </div>
                             <!--/.col-->
                             <div class="col-4">
                                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-                                    <a href="{{ route('admin.tags') }}" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="tags List"><i class="mdi mdi-format-list-bulleted-type"></i> List</a>
+                                    <a href="{{ route('admin.posts') }}" class="btn btn-secondary btn-sm ml-1" data-toggle="tooltip" title="" data-original-title="Posts List"><i class="mdi mdi-format-list-bulleted-type"></i> List</a>
                                 </div>
                             </div>
                             <!--/.col-->
@@ -62,10 +60,30 @@
                                     @csrf
 
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-9">
                                             <div class="form-group">
                                                 <label for="title">Title</label> <span class="text-danger">*</span>
                                                 <input class="form-control" type="text" name="title" id="title" placeholder="Post Title" value="{{ $post->title }}" required="">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="featured_image">Featured Image</label> <span class="text-danger">*</span>
+                                                <div class="input-group mb-3">
+                                                    <input class="form-control" type="file" name="featured_image" id="featured_image" placeholder="Featured Image" required="" aria-label="Image" aria-describedby="button-image" value="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-info" type="button" id="button-image"><i class="fas fa-folder-open"></i> Browse</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mt-1">
+                                            <div class="card">
+                                                <div class="card-header text-center p-2">
+                                                    <h4>Featered Image</h4>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <img src="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}" width="100%" alt="">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -86,19 +104,6 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="featured_image">Featured Image</label> <span class="text-danger">*</span>
-                                                <div class="input-group mb-3">
-                                                    <input class="form-control" type="file" name="featured_image" id="featured_image" placeholder="Featured Image" required="" aria-label="Image" aria-describedby="button-image" value="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-info" type="button" id="button-image"><i class="fas fa-folder-open"></i> Browse</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label for="category_id">Category</label> <span class="text-danger">*</span>
@@ -108,7 +113,9 @@
                                                             @foreach($post->categories as $postCategory)
                                                                 {{ $postCategory->id == $category->id ? "selected" : ""}}
                                                             @endforeach
-                                                        value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                            value="{{ $category->id }}">
+                                                            {{ $category->category_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -135,9 +142,15 @@
                                             <div class="form-group">
                                                 <label for="is_featured">Is Featured</label> <span class="text-danger">*</span>
                                                 <select name="is_featured" id="is_featured" class="form-control select2">
-                                                    <option value="">Choose any Option</option>
-                                                    <option value="1">Yes</option>
-                                                    <option value="0">No</option>
+                                                    <option
+                                                        {{ $post->is_featured ? "selected" : ""}}
+                                                        value="{{ $post->is_featured }}">
+                                                        @if($post->is_featured == 1)
+                                                            Yes
+                                                        @else
+                                                            No
+                                                        @endif
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -147,9 +160,14 @@
                                             <div class="form-group">
                                                 <label for="tag_id">Tags</label>
                                                 <select name="tag_id[]" id="tag_id" class="form-control select2" multiple>
-                                                    <option value="">-- Select an Option --</option>
-                                                    @foreach($tags as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->tag_name }}</option>
+                                                    @foreach($tags as $tag)
+                                                        <option
+                                                            @foreach($post->tags as $postTag)
+                                                                {{ $postTag->id == $tag->id ? "selected" : ""}}
+                                                            @endforeach
+                                                            value="{{ $tag->id }}">
+                                                            {{ $tag->tag_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -158,9 +176,11 @@
                                             <div class="form-group">
                                                 <label for="status">Status</label> <span class="text-danger">*</span>
                                                 <select name="status" id="status" class="form-control select2">
-                                                    <option value="">-- Select an Option --</option>
-                                                    <option value="1">Published</option>
-                                                    <option value="0">Draft</option>
+                                                    <option
+                                                        {{ $post->post_status ? "selected" : "" }}
+                                                         value="{{ $post->post_status }}">
+                                                         {{ $post->post_status == 1 ? "Published" : "Draft" }}
+                                                        </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -169,13 +189,13 @@
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="meta_title">Meta Title</label>
-                                                <input class="form-control" type="text" name="meta_title" id="meta_title" placeholder="Meta Title">
+                                                <input class="form-control" type="text" name="meta_title" id="meta_title" value="{{ $post->meta_title }}">
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="meta_keywords">Meta Keywords</label>
-                                                <input class="form-control" type="text" name="meta_keywords" id="meta_keywords" placeholder="Meta Keywords">
+                                                <input class="form-control" type="text" name="meta_keywords" id="meta_keywords" value="{{ $post->meta_keyword }}">
                                             </div>
                                         </div>
                                     </div>
@@ -183,13 +203,13 @@
                                         <div class="col-12 col-sm-6">
                                             <div class="form-group">
                                                 <label for="meta_description">Meta Description</label>
-                                                <input class="form-control" type="text" name="meta_description" id="meta_description" placeholder="Meta Description">
+                                                <input class="form-control" type="text" name="meta_description" id="meta_description" value="{{ $post->meta_description }}">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6">
                                             <div class="form-group">
                                                 <label for="meta_og_image">Meta Open Graph Image</label>
-                                                <input class="form-control" type="text" name="meta_og_image" id="meta_og_image" placeholder="Meta Open Graph Image">
+                                                <input class="form-control" type="text" name="meta_og_image" id="meta_og_image" value="{{ $post->featured_image }}">
                                             </div>
                                         </div>
                                     </div>
@@ -197,7 +217,7 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label for="meta_og_url">Meta Open Graph URL</label>
-                                                <input class="form-control" type="text" name="meta_og_url" id="meta_og_url" placeholder="Meta Open Graph URL">
+                                                <input class="form-control" type="text" name="meta_og_url" id="meta_og_url" value="{{ $post->featured_image }}">
                                             </div>
                                         </div>
                                     </div>
@@ -241,14 +261,14 @@
     <script src="{{ asset('backend/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('backend/select2/select2.min.js') }}"></script>
     <script>
-        // ClassicEditor
-        //     .create( document.querySelector( '#postTextareaEditor' ) )
-        //     .then( editor => {
-        //         return editor;
-        //     } )
-        //     .catch( err => {
-        //         return err;
-        //     } );
+        ClassicEditor
+            .create( document.querySelector( '#postTextareaEditor' ) )
+            .then( editor => {
+                return editor;
+            } )
+            .catch( err => {
+                return err;
+            } );
             
         // Select2 javascript
         $(document).ready(function() {
