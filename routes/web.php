@@ -60,3 +60,5 @@ Route::post('/admin/post/store', [PostController::class, 'store'])->name('admin.
 Route::post('/admin/post/ckeditor', [PostController::class, 'ckeditor'])->name('admin.ckeditor.store');
 Route::get('/admin/post/show/{id}/{slug}', [PostController::class, 'show']);
 Route::get('/admin/post/edit/{id}/{slug}', [PostController::class, 'edit']);
+Route::post('/admin/post/update/{id}/{slug}', [PostController::class, 'update'])->name('admin.post.update');
+Route::post('/admin/post/ckeditor/update/{id}', [PostController::class, 'ckeditorUpdate'])->name('admin.ckeditor.update');

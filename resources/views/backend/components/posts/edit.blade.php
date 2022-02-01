@@ -56,7 +56,7 @@
 
                         <div class="row mt-4">
                             <div class="col">
-                            <form class="form" method="POST" action="{{ route('admin.post.store') }}" enctype="multipart/form-data">
+                                <form class="form" method="POST" action="{{ route('admin.post.update',[$post->id, $post->slug]) }}" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="row">
@@ -65,11 +65,11 @@
                                                 <label for="title">Title</label> <span class="text-danger">*</span>
                                                 <input class="form-control" type="text" name="title" id="title" placeholder="Post Title" value="{{ $post->title }}" required="">
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label for="featured_image">Featured Image</label> <span class="text-danger">*</span>
                                                 <div class="input-group mb-3">
-                                                    <input class="form-control" type="file" name="featured_image" id="featured_image" placeholder="Featured Image" required="" aria-label="Image" aria-describedby="button-image" value="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}">
+                                                    <input class="form-control" type="file" name="featured_image" id="featured_image" placeholder="Featured Image" aria-label="Image" aria-describedby="button-image" value="{{ Storage::disk('public')->url('/posts/'.$post->featured_image) }}">
                                                     <div class="input-group-append">
                                                         <button class="btn btn-info" type="button" id="button-image"><i class="fas fa-folder-open"></i> Browse</button>
                                                     </div>
@@ -99,41 +99,64 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label for="description">Content</label> <span class="text-danger">*</span>
-                                                <textarea class="form-control" name="description" id="postTextareaEditor" placeholder="Content" value="{{ $post->description }}">{{ $post->description }}</textarea>
+                                                <textarea class="form-control" name="description" id="description" placeholder="Content" value="{{ $post->description }}">{{ $post->description }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="category_id">Category</label> <span class="text-danger">*</span>
+                                                <select name="category_id[]" id="category_id" class="form-control select2" multiple="multiple">
+                                                    @foreach($categories as $category)
+                                                    <option @foreach($post->categories as $postCategory)
+                                                        {{ $postCategory->id == $category->id ? "selected" : ""}}
+                                                        @endforeach
+                                                        value="{{ $category->id }}">
+                                                        {{ $category->category_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="tag_id">Tags</label>
+                                                <select name="tag_id[]" id="tag_id" class="form-control select2" multiple>
+                                                    @foreach($tags as $tag)
+                                                    <option @foreach($post->tags as $postTag)
+                                                        {{ $postTag->id == $tag->id ? "selected" : ""}}
+                                                        @endforeach
+                                                        value="{{ $tag->id }}">
+                                                        {{ $tag->tag_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="category_id">Category</label> <span class="text-danger">*</span>
-                                                <select name="category_id[]" id="category_id" class="form-control select2" multiple="multiple">
-                                                    @foreach($categories as $category)
-                                                        <option
-                                                            @foreach($post->categories as $postCategory)
-                                                                {{ $postCategory->id == $category->id ? "selected" : ""}}
-                                                            @endforeach
-                                                            value="{{ $category->id }}">
-                                                            {{ $category->category_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
                                                 <label for="type">Type</label> <span class="text-danger">*</span>
                                                 <select name="type" id="type" class="form-control select2">
-                                                    <option
-                                                        {{ $post->type ? "selected" : ""}}
-                                                        value="{{ $post->type }}">
-                                                        @if($post->type ==1)
-                                                            Article
-                                                        @elseif($post->type == 2)
-                                                            News
-                                                        @else
-                                                            Media
+                                                    <option @if($post->type == 1)
+                                                        selected
                                                         @endif
+                                                        value="1">
+                                                        Article
+                                                    </option>
+                                                    <option @if($post->type == 2)
+                                                        selected
+                                                        @endif
+                                                        value="2">
+                                                        News
+                                                    </option>
+                                                    <option @if($post->type == 3)
+                                                        selected
+                                                        @endif
+                                                        value="3">
+                                                        Media
                                                     </option>
                                                 </select>
                                             </div>
@@ -142,45 +165,25 @@
                                             <div class="form-group">
                                                 <label for="is_featured">Is Featured</label> <span class="text-danger">*</span>
                                                 <select name="is_featured" id="is_featured" class="form-control select2">
-                                                    <option
-                                                        {{ $post->is_featured ? "selected" : ""}}
-                                                        value="{{ $post->is_featured }}">
-                                                        @if($post->is_featured == 1)
-                                                            Yes
-                                                        @else
-                                                            No
-                                                        @endif
+                                                    <option @if($post->is_featured == 0) selected @endif
+                                                        value="0"> Yes
+                                                    </option>
+                                                    <option @if($post->is_featured == 1) selected @endif
+                                                        value="1"> No
                                                     </option>
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="tag_id">Tags</label>
-                                                <select name="tag_id[]" id="tag_id" class="form-control select2" multiple>
-                                                    @foreach($tags as $tag)
-                                                        <option
-                                                            @foreach($post->tags as $postTag)
-                                                                {{ $postTag->id == $tag->id ? "selected" : ""}}
-                                                            @endforeach
-                                                            value="{{ $tag->id }}">
-                                                            {{ $tag->tag_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <label for="status">Status</label> <span class="text-danger">*</span>
                                                 <select name="status" id="status" class="form-control select2">
-                                                    <option
-                                                        {{ $post->post_status ? "selected" : "" }}
-                                                         value="{{ $post->post_status }}">
-                                                         {{ $post->post_status == 1 ? "Published" : "Draft" }}
-                                                        </option>
+                                                    <option @if($post->post_status == 0) selected @endif
+                                                        value="0"> Draft
+                                                    </option>
+                                                    <option @if($post->post_status == 1) selected @endif
+                                                        value="1"> Published
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -242,15 +245,15 @@
                             </div>
                         </div>
                         <div class="row">
-                           <div class="col-sm-12 col-md-12 text-right">
-                            <hr/>
+                            <div class="col-sm-12 col-md-12 text-right">
+                                <hr />
                                 @if($post->created_at)
-                                    <span><b>{{ 'Created At: ' }}</b>{{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}</span> 
+                                <span><b>{{ 'Created At: ' }}</b>{{ Carbon\Carbon::parse($post->created_at)->toDayDateTimeString() }}</span>
                                 @endif
                                 @if($post->updated_at)
-                                    <span><b>{{ ' Updated At: ' }}</b>{{ Carbon\Carbon::parse($post->updated_at)->diffForHumans() }}</span> 
+                                <span><b>{{ ' Updated At: ' }}</b>{{ Carbon\Carbon::parse($post->updated_at)->diffForHumans() }}</span>
                                 @endif
-                           </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -258,26 +261,6 @@
         </div>
     </div>
     @push('scripts')
-    <script src="{{ asset('backend/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('backend/select2/select2.min.js') }}"></script>
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#postTextareaEditor' ) )
-            .then( editor => {
-                return editor;
-            } )
-            .catch( err => {
-                return err;
-            } );
-            
-        // Select2 javascript
-        $(document).ready(function() {
-            $('.select2').select2({
-                theme: "bootstrap",
-                placeholder: "-- Choose any Option --"
-            });
-        });
-    </script>
-    
+    @include('backend.components.posts.ckeditorUpdate')
     @endpush
 </x-admin-layout>
